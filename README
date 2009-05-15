@@ -1,7 +1,7 @@
 fadeAble is a jquery image fading  plugin that is different for a number of reasons
 
 1. You only add one image to your html
-2. You specify the additional images when you initilize the plugin so they are added 
+2. You specify the additional images when you initialize the plugin so they are added 
 later. This still gives some time for preloading while not cause your pages to need 4 
 images from the get go
 
