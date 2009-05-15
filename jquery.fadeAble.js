@@ -13,7 +13,8 @@
   		loop:         false,
   		images:       [],
   		current:      0
-	  }
+	  };
+	  
 		// Set the options.
 		var options = $.extend(defaults, options);
     
@@ -22,15 +23,15 @@
 		  var container = this;
 		  var containerImage = $(container).children('img');
 		  
-		  $(container).css({'position':'relative','height':$(containerImage).height(),'width':$(containerImage).width()})
+		  $(container).css({'position':'relative','height':$(containerImage).height(),'width':$(containerImage).width()});
 		  
 		  $(options.images).each(function(){
-		    $(container).append('<img style="display:none" src="'+this+'" />')
-		  })
+		    $(container).append('<img style="display:none" src="'+this+'" />');
+		  });
 		  
-		  $(container).children('img').css({'position':'absolute','top':'0','left':'0','z-index':'-1'})
+		  $(container).children('img').css({'position':'absolute','top':'0','left':'0','z-index':'-1'});
 		  
-		  options.images = $.merge([$(container).children('img:eq(0)').attr('src')],options.images)
+		  options.images = $.merge([$(container).children('img:eq(0)').attr('src')],options.images);
 			
 		  if (options.controlsShow){
 				var controls = ' <span class="button" id="'+ options.prevId +'"><a href=\"javascript:void(0);\">'+ options.prevText +'</a></span>';
