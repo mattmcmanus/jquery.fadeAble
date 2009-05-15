@@ -75,8 +75,8 @@
   	  }
   	  
   	  var imgs = $(container).children('img');
-  	  children.eq(nextIndex).fadeIn(options.speed);
-  	  children.eq(options.current).fadeOut(options.speed);
+  	  imgs.eq(nextIndex).fadeIn(options.speed);
+  	  imgs.eq(options.current).fadeOut(options.speed);
       
   		options.current = nextIndex;
       
