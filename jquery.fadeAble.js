@@ -36,8 +36,7 @@
 		  $(container).children('img').css({
 		    position:  'absolute',
 		    top:        0,
-		    left:       0,
-		    'z-index': -1
+		    left:       0
 		  });
 		  
 		  //prepend $(img:first).src to array
@@ -45,9 +44,9 @@
 			
 		  if (options.controlsShow) {
 				$(this).append(
-				  ' <span class="button" id="'+options.prevId+'">' + \
-  				'<a href=\"javascript:void(0);\">'+ \
-  				options.prevText +'</a></span> <span class="button" id="'+options.nextId+'">' + \
+				  ' <span class="button" id="'+options.prevId+'">' + 
+  				'<a href=\"javascript:void(0);\">'+
+  				options.prevText +'</a></span> <span class="button" id="'+options.nextId+'">' +
   				'<a href=\"javascript:void(0);\">'+  options.nextText +'</a></span>'
 				);
 				
@@ -63,20 +62,18 @@
 		});
 		
 		function fade(direction, container) {
-      if (options.timeout) {
+      if (options.timeout)
         clearTimeout(options.timeout);
-      }
       
   	  var nextIndex;
-  	  if (direction == 'prev') {
+  	  if (direction == 'prev')
   	    nextIndex = ( options.current == 0 ) ? options.images.length-1 : options.current-1;
-  	  } else {
+  	  else
   	    nextIndex = ( options.current == options.images.length-1 ) ? 0 : options.current+1;
-  	  }
   	  
   	  var imgs = $(container).children('img');
-  	  imgs.eq(nextIndex).fadeIn(options.speed);
   	  imgs.eq(options.current).fadeOut(options.speed);
+  	  imgs.eq(nextIndex).fadeIn(options.speed);
       
   		options.current = nextIndex;
       
