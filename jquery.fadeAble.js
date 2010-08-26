@@ -5,14 +5,17 @@
   		prevText: 		'Previous',
   		nextId: 		  'nextButton',	
   		nextText: 		'Next',
-  		controlsShow: true,
+  		playId: 		  'playButton',	
+  		playText: 		'Play/Pause',
+  		controlsShow: false,
   		controlsFade: true,
   		speed:        800,
-  		autoPlay:     false,
+  		autoPlay:     true,
   		pause:        2000,
-  		loop:         false,
+  		loop:         true,
   		images:       [],
-  		current:      0
+  		current:      0,
+  		timeoutToggle:true
 	  };
 	  
 		// Set the options.
@@ -54,17 +57,20 @@
 			
 		  if (options.controlsShow) {
 				$(this).append(
-				  '<span class="button" style="z-index:2" id="'+options.prevId+'">' + 
-  					'<a href=\"javascript:void(0);\">'+options.prevText +'</a></span>' +
-  				'<span class="button" style="z-index:2" id="'+options.nextId+'">' +
-  					'<a href=\"javascript:void(0);\">'+  options.nextText +'</a></span>'
+				  '<div id="controls-container">'+
+				    '<a class="button" id="'+options.prevId+'" href=\"javascript:void(0);\">'+options.prevText +'</a>'+
+				    '<a class="button pause" id="'+options.playId+'" href=\"javascript:void(0);\">'+options.playText +'</a>'+
+				    '<a class="button" id="'+options.nextId+'" href=\"javascript:void(0);\">'+  options.nextText +'</a>'+
+			    '</div>'
 				);
 				
 				$("#"+options.nextId).click(function(){ fade("next", container); });
+				$("#"+options.playId).click(function(){ toggle(container); });
   			$("#"+options.prevId).click(function(){ fade("prev", container); });	
 			}
 			
-			if (options.loop) {
+			if (options.loop && options.autoplay) {
+			  options.timeoutToggle = true;
 			  options.timeout = setTimeout(function(){
 					fade("next", container);
 				}, options.pause);
@@ -98,6 +104,19 @@
   				fade("next", container);
   			}, options.pause);
   		}
+    }
+    
+    function toggle (container) {
+      if (options.timeoutToggle && options.timeout) {
+        clearTimeout(options.timeout);
+        options.timeoutToggle = false;
+      } else if (!options.timeoutToggle){
+        options.timeoutToggle = true;
+			  options.timeout = setTimeout(function(){
+					fade("next", container);
+				}, options.pause);
+      };
+      $('#playButton').toggleClass("play").toggleClass("pause")
     }
 	};
 })(jQuery);
