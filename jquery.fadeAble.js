@@ -59,17 +59,24 @@
 				$(this).append(
 				  '<div id="controls-container">'+
 				    '<a class="button" id="'+options.prevId+'" href=\"javascript:void(0);\">'+options.prevText +'</a>'+
-				    '<a class="button pause" id="'+options.playId+'" href=\"javascript:void(0);\">'+options.playText +'</a>'+
+				    '<a class="button" id="'+options.playId+'" href=\"javascript:void(0);\">'+options.playText +'</a>'+
 				    '<a class="button" id="'+options.nextId+'" href=\"javascript:void(0);\">'+  options.nextText +'</a>'+
 			    '</div>'
 				);
+				//Set the right class, If auto play is on set pause if it's not, set play
+				$('#'+options.playId).addClass((options.autoPlay)?'pause':'play');
 				
 				$("#"+options.nextId).click(function(){ fade("next", container); });
 				$("#"+options.playId).click(function(){ toggle(container); });
   			$("#"+options.prevId).click(function(){ fade("prev", container); });	
 			}
 			
-			if (options.loop && options.autoplay) {
+			$('#controls-container .button').css({
+			  'z-index':5
+			  
+		  })
+			
+			if (options.loop && options.autoPlay) {
 			  options.timeoutToggle = true;
 			  options.timeout = setTimeout(function(){
 					fade("next", container);
