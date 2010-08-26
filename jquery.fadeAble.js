@@ -1,6 +1,7 @@
 ;(function($) {
 	$.fn.fadeAble = function(options)	{
 	  var defaults = {
+	    constrolsContainerID:  'controls-container',
 	    prevId: 		  'prevButton',
   		prevText: 		'Previous',
   		nextId: 		  'nextButton',	
@@ -9,6 +10,7 @@
   		playText: 		'Play/Pause',
   		controlsShow: false,
   		controlsFade: true,
+  		controlsFadeTo: 0,
   		speed:        800,
   		autoPlay:     true,
   		pause:        2000,
@@ -57,24 +59,31 @@
 			
 		  if (options.controlsShow) {
 				$(this).append(
-				  '<div id="controls-container">'+
+				  '<div id="'+options.constrolsContainerID+'" style="opacity:0">'+
 				    '<a class="button" id="'+options.prevId+'" href=\"javascript:void(0);\">'+options.prevText +'</a>'+
 				    '<a class="button" id="'+options.playId+'" href=\"javascript:void(0);\">'+options.playText +'</a>'+
 				    '<a class="button" id="'+options.nextId+'" href=\"javascript:void(0);\">'+  options.nextText +'</a>'+
 			    '</div>'
 				);
-				//Set the right class, If auto play is on set pause if it's not, set play
+				// Set the right class, If auto play is on set pause if it's not, set play
 				$('#'+options.playId).addClass((options.autoPlay)?'pause':'play');
 				
+				// Set the onclick events
 				$("#"+options.nextId).click(function(){ fade("next", container); });
 				$("#"+options.playId).click(function(){ toggle(container); });
-  			$("#"+options.prevId).click(function(){ fade("prev", container); });	
+  			$("#"+options.prevId).click(function(){ fade("prev", container); });
+  			
+  			// Should the controls fade in and out all fancy like?
+  			if (options.controlsFade) {
+  			  $('#'+options.constrolsContainerID).fadeTo(250,options.controlsFadeTo);
+  			  $(container).hover(
+  			    function(){ $('#'+options.constrolsContainerID).fadeTo(250,1); },
+  			    function(){ $('#'+options.constrolsContainerID).fadeTo(250,options.controlsFadeTo); }
+  			  )
+  			}
 			}
-			
-			$('#controls-container .button').css({
-			  'z-index':5
-			  
-		  })
+			// TODO: Decide whether to supply a stylesheet with this or keep it in js
+			$('#controls-container .button').css({'z-index':5})
 			
 			if (options.loop && options.autoPlay) {
 			  options.timeoutToggle = true;
