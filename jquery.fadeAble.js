@@ -127,7 +127,6 @@
   	  } else if(nextIndex == 'next') {
   	    nextIndex = ( options.current == options.images.length-1 ) ? 0 : (options.current+1);
   	  }
-  	  console.log(nextIndex)
   	  // Animate the transition
   	  var imgs = $(container).children('a.fadeAble');
   	  imgs.hide();
