@@ -98,10 +98,11 @@
 			  $('<div></div>').attr('id',options.contextContainerID).css({position:"absolute",bottom:'12px',left:"50%",'z-index':5}).appendTo(container);
 			  //Add the appropriate links for the container
 			  $(options.images).each(function(index){
-  		    $('<a>'+index+'</a>').attr({'title':this.title, 'data-image':index})
+  		    $('<a>'+index+'</a>').attr({'title':this.title})
+  		      .data('image',index)
   		      .addClass((index==0)?'current':'')
   		      .click(function(){
-  		        fade($(this).attr('data-image'),container)
+  		        fade($(this).data('image'),container)
   		      })
   		      .appendTo('#'+options.contextContainerID);
   		  });
@@ -122,11 +123,11 @@
       
       //Figure out what the next index should be
   	  if (nextIndex == 'prev') {
-  	    nextIndex = ( options.current == 0 ) ? options.images.length-1 : options.current-1;
+  	    nextIndex = ( options.current == 0 ) ? options.images.length-1 : (options.current-1);
   	  } else if(nextIndex == 'next') {
-  	    nextIndex = ( options.current == options.images.length-1 ) ? 0 : options.current+1;
+  	    nextIndex = ( options.current == options.images.length-1 ) ? 0 : (options.current+1);
   	  }
-  	  
+  	  console.log(nextIndex)
   	  // Animate the transition
   	  var imgs = $(container).children('a.fadeAble');
   	  imgs.hide();
