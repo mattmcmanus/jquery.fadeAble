@@ -1,7 +1,8 @@
 ;(function($) {
 	$.fn.fadeAble = function(options)	{
 	  var defaults = {
-	    constrolsContainerID:  'controls-container',
+	    controlsContainerID:  'controls-container',
+	    contextContainerID:  'context-container',
 	    prevId: 		  'prevButton',
   		prevText: 		'Previous',
   		nextId: 		  'nextButton',	
@@ -11,6 +12,7 @@
   		controlsShow: false,
   		controlsFade: true,
   		controlsFadeTo: 0,
+  		contextShow   : false,
   		speed:        800,
   		autoPlay:     true,
   		pause:        2000,
@@ -27,7 +29,7 @@
 		this.each(function(){
 		  var container = this;
 		  var defaultLink = $(container).children('a');
-		  	defaultLink.addClass("fadeAble")
+		  	defaultLink.addClass("fadeAble");
 		  var defaultImage = $(defaultLink).children('img');
 		  
 		  // Let's make sure things don't start jumping around all crazy like
@@ -38,8 +40,13 @@
 		  });
 		  
 		  // Add the additional images inside your container
-		  $(options.images).each(function(){
-		    $(container).append('<a href="'+this.href+'" class="fadeAble" style="display:none" title="'+this.title+'"><img src="'+this.src+'" /></a>');
+		  $(options.images).each(function(index){
+		    $('<a></a>').attr({
+		      href: this.href,
+		      title:this.title,
+		      class: "fadeAble"
+		    }).hide().append('<img src="'+this.src+'" />')
+		    .appendTo(container)
 		  });
 		  
 		  // Make sure things line up nicely
@@ -56,10 +63,10 @@
 		  		"title": $(defaultLink).attr('title')
 		  });
 		  
-			
+			// Lets add some controls!
 		  if (options.controlsShow) {
 				$(this).append(
-				  '<div id="'+options.constrolsContainerID+'" style="opacity:0">'+
+				  '<div id="'+options.controlsContainerID+'" style="opacity:0">'+
 				    '<a class="button" id="'+options.prevId+'" href=\"javascript:void(0);\">'+options.prevText +'</a>'+
 				    '<a class="button" id="'+options.playId+'" href=\"javascript:void(0);\">'+options.playText +'</a>'+
 				    '<a class="button" id="'+options.nextId+'" href=\"javascript:void(0);\">'+  options.nextText +'</a>'+
@@ -75,16 +82,31 @@
   			
   			// Should the controls fade in and out all fancy like?
   			if (options.controlsFade) {
-  			  $('#'+options.constrolsContainerID).fadeTo(250,options.controlsFadeTo);
+  			  $('#'+options.controlsContainerID).fadeTo(250,options.controlsFadeTo);
   			  $(container).hover(
-  			    function(){ $('#'+options.constrolsContainerID).fadeTo(250,1); },
-  			    function(){ $('#'+options.constrolsContainerID).fadeTo(250,options.controlsFadeTo); }
+  			    function(){ $('#'+options.controlsContainerID).fadeTo(250,1); },
+  			    function(){ $('#'+options.controlsContainerID).fadeTo(250,options.controlsFadeTo); }
   			  )
   			}
 			}
 			// TODO: Decide whether to supply a stylesheet with this or keep it in js
-			$('#controls-container .button').css({'z-index':5})
+			$('#'+options.controlsContainerID+' .button').css({'z-index':5})
 			
+			// TODO: Write context code, will require fade function rewrite
+			if (options.contextShow) {
+			  // Add the container
+			  $('<div></div>').attr('id',options.contextContainerID).css({position:"absolute",bottom:'12px',left:"50%",'z-index':5}).appendTo(container);
+			  //Add the appropriate links for the container
+			  $(options.images).each(function(index){
+  		    $('<a>'+index+'</a>').attr({'title':this.title, 'data-image':index})
+  		      .addClass((index==0)?'current':'')
+  		      .click(function(){
+  		        fade($(this).attr('data-image'),container)
+  		      })
+  		      .appendTo('#'+options.contextContainerID);
+  		  });
+			};
+			// If autoplay and loop is on, start playing!
 			if (options.loop && options.autoPlay) {
 			  options.timeoutToggle = true;
 			  options.timeout = setTimeout(function(){
@@ -93,16 +115,15 @@
 			}
 		});
 		
-		function fade(direction, container) {
+		function fade(nextIndex, container) {
       if (options.timeout) {
         clearTimeout(options.timeout);
       }
       
       //Figure out what the next index should be
-  	  var nextIndex;
-  	  if (direction == 'prev') {
+  	  if (nextIndex == 'prev') {
   	    nextIndex = ( options.current == 0 ) ? options.images.length-1 : options.current-1;
-  	  } else {
+  	  } else if(nextIndex == 'next') {
   	    nextIndex = ( options.current == options.images.length-1 ) ? 0 : options.current+1;
   	  }
   	  
@@ -112,6 +133,11 @@
   	  imgs.eq(options.current).show().css('z-index', '0');
   	  imgs.eq(nextIndex).css('z-index', '1').fadeIn(options.speed);
       
+  	  if (options.contextShow) {
+  	    $('#'+options.contextContainerID+' a').removeClass('current')
+  	                                          .eq(nextIndex).addClass('current')
+  	  };
+  	  
   		options.current = nextIndex;
       
   		// Reset the time
